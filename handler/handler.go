@@ -12,9 +12,12 @@ import (
 	"gorm.io/gorm"
 )
 
-// create user
-
 var dbCon *gorm.DB
+
+// InitHandler initializes the database connection for handlers
+func InitHandler(db *gorm.DB) {
+	dbCon = db
+}
 
 func CreateAccount(c *gin.Context) {
 	var req model.AccountCreationData
