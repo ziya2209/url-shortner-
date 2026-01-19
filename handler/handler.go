@@ -13,6 +13,7 @@ import (
 )
 
 var dbCon *gorm.DB
+var secret = "ziya"
 
 // InitHandler initializes the database connection for handlers
 func InitHandler(db *gorm.DB) {
@@ -107,8 +108,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	secret := "ziya"
-
 	claims := jwt.MapClaims{
 		"name":  user.Name,
 		"email": user.Email,
@@ -127,6 +126,5 @@ func Login(c *gin.Context) {
 		"msg":   "user login succesfully",
 		"token": tokenString,
 	})
-
 
 }

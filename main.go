@@ -12,7 +12,7 @@ import (
 var dbCon *gorm.DB
 
 func main() {
-	// Initialize database connection
+	//Initialize database connection
 	dbCon = config.InitDB()
 
 	// Initialize handler with database connection
@@ -21,6 +21,8 @@ func main() {
 	router := gin.Default()
 	router.POST("/account", handler.CreateAccount)
 	router.POST("/login", handler.Login)
+	router.POST("/getshorturl", handler.AuthMiddleware, handler.GetShortenUrl)
+	router.GET("/:id", handler.RedRedirect)
 	err := router.Run(":8081")
 	if err != nil {
 		fmt.Println("your web server falied to run ")
