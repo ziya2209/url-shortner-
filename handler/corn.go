@@ -2,11 +2,9 @@ package handler
 
 import (
 	"log"
-	"net/http"
 	"time"
 	"url/model"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +14,7 @@ import (
 // New ttl :=  time.Now().Add(time.Hour * 24 *30 *12 * 10)
 // We need to clear/delete that row/url
 
-func CornJob(c *gin.Context) {
+func CornJob() {
 	// Calculate the date 10 years ago
 	tenYearsAgo := time.Now().AddDate(-10, 0, 0)
 	twoMonthsAgo := time.Now().AddDate(0, -2, 0)
@@ -26,9 +24,6 @@ func CornJob(c *gin.Context) {
 	result := dbCon.Where("ttl IS NOT NULL AND ttl <= ?", tenYearsAgo).Find(&urls)
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		log.Printf("Error fetching stale URLs: %v", result.Error)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch stale URLs",
-		})
 		return
 	}
 
@@ -78,9 +73,5 @@ func CornJob(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message":       "Cron job completed successfully",
-		"deleted_count": deletedCount,
-		"updated_count": updatedCount,
-	})
+	log.Printf("Cron job completed successfully - Deleted: %d, Updated: %d", deletedCount, updatedCount)
 }
