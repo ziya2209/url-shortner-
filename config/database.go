@@ -16,12 +16,13 @@ func InitDB() *gorm.DB {
 	// Get database credentials from environment variables
 	// You can set these in a .env file or as system environment variables
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		getEnv("DB_HOST", "localhost"),
 		getEnv("DB_USER", "postgres"),
 		getEnv("DB_PASSWORD", "postgres"),
 		getEnv("DB_NAME", "url_shortener"),
 		getEnv("DB_PORT", "5433"),
+		getEnv("DB_SSLMODE", "disable"),
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
