@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -11,19 +12,20 @@ import (
 var RedisClient *redis.Client
 
 func InitRedisClient() {
-	log.Println("idr fir aagya")
+	db, err := strconv.Atoi(getEnv("REDIS_DB", "0"))
+	if err != nil {
+		db = 0
+	}
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password
-		DB:       0,  // use default DB
+		Addr:     getEnv("REDIS_ADDR", "localhost:6379"),
+		Password: getEnv("REDIS_PASSWORD", ""),
+		DB:       db,
 	})
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-	err := rdb.Ping(ctx).Err()
-	if err != nil {
+	if err := rdb.Ping(ctx).Err(); err != nil {
 		log.Fatal("redis failed to initialize")
 	}
 	log.Println("succesfully connect with redis")
 	RedisClient = rdb
-
 }
