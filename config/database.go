@@ -21,7 +21,7 @@ func InitDB() *gorm.DB {
 		getEnv("DB_USER", "postgres"),
 		getEnv("DB_PASSWORD", "postgres"),
 		getEnv("DB_NAME", "url_shortener"),
-		getEnv("DB_PORT", "5432"),
+		getEnv("DB_PORT", "5433"),
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

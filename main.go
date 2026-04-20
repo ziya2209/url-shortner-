@@ -26,6 +26,7 @@ func main() {
 
 	// Initialize database connection
 	dbCon = config.InitDB()
+	config.InitRedisClient()
 
 	// Initialize handler with database connection
 	handler.InitHandler(dbCon)
@@ -40,9 +41,10 @@ func main() {
 
 	// Run gin server (service mode)
 	router := gin.Default()
-	router.POST("/account", handler.CreateAccount)
+	router.StaticFile("/", "./frontend/index.html")
+	router.POST("/account", handler.RateLimit, handler.CreateAccount)
 	router.POST("/login", handler.Login)
-	router.POST("/getshorturl", handler.AuthMiddleware, handler.GetShortenUrl)
+	router.POST("/getshorturl", handler.RateLimit, handler.AuthMiddleware, handler.GetShortenUrl)
 	router.GET("/:id", handler.RedRedirect)
 
 	fmt.Println("Starting web server on :8081...")
